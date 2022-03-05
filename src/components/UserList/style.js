@@ -1,8 +1,16 @@
 import styled from "styled-components";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export const UserList = styled.div`
   display: flex;
   flex-direction: column;
+  margin: auto;
+`;
+
+export const InfiniteList = styled(InfiniteScroll)`
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
 `;
 
 export const List = styled.div`
@@ -13,6 +21,8 @@ export const List = styled.div`
   height: calc(100vh - 350px);
   margin-block-start: 30px;
   overflow-y: auto;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
 export const User = styled.div`

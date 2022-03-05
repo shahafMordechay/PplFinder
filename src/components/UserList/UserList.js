@@ -120,7 +120,7 @@ const UserList = ({
           ))}
       </S.Filters>
       <S.List id="infinityList">
-        <InfiniteScroll
+        <S.InfiniteList
           dataLength={getFilteredUsers().length}
           next={onInfiniteScrollNext}
           hasMore={users.length <= 300}
@@ -156,12 +156,17 @@ const UserList = ({
               </S.User>
             );
           })}
-        </InfiniteScroll>
-        {isLoading && (
-          <S.SpinnerWrapper>
-            <Spinner color="primary" size="45px" thickness={6} variant="indeterminate" />
-          </S.SpinnerWrapper>
-        )}
+          {isLoading && (
+            <S.SpinnerWrapper>
+              <Spinner
+                color="primary"
+                size="45px"
+                thickness={6}
+                variant="indeterminate"
+              />
+            </S.SpinnerWrapper>
+          )}
+        </S.InfiniteList>
       </S.List>
     </S.UserList>
   );
