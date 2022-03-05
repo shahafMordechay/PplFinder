@@ -13,7 +13,7 @@ const Home = () => {
     { value: "DK", label: "Denmark" },
   ];
 
-  const { users, isLoading, fetchUsers } = usePeopleFetch();
+  const { users, isLoading, fetchUsers, fetchMoreUsers } = usePeopleFetch();
   const favorites = useFavoriteFetch();
 
   return (
@@ -31,6 +31,7 @@ const Home = () => {
           fetchUsers={fetchUsers}
           favorites={favorites.users}
           fetchFavorites={favorites.fetchUsers}
+          fetchMoreUsers={fetchMoreUsers}
         />
       </S.Content>
     </S.Home>

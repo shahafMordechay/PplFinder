@@ -6,6 +6,7 @@ import CheckBox from "components/CheckBox";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import * as S from "./style";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const UserList = ({
   users,
@@ -14,6 +15,7 @@ const UserList = ({
   fetchUsers,
   favorites,
   fetchFavorites,
+  fetchMoreUsers,
 }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
   const [checkedNat, setCheckedNat] = useState(new Set());
@@ -58,6 +60,10 @@ const UserList = ({
     return favorites.map((user) => user.email).includes(users[index].email);
   };
 
+  const InfiniteScrollNext = () => {
+    fetchMoreUsers?.(Array.from(checkedNat).join(","));
+  };
+
   return (
     <S.UserList>
       <S.Filters>
@@ -72,37 +78,44 @@ const UserList = ({
             />
           ))}
       </S.Filters>
-      <S.List>
-        {users.map((user, index) => {
-          return (
-            <S.User
-              key={index}
-              onMouseEnter={() => handleMouseEnter(index)}
-              onMouseLeave={handleMouseLeave}
-            >
-              <S.UserPicture src={user?.picture.large} alt="" />
-              <S.UserInfo>
-                <Text size="22px" bold>
-                  {user?.name.title} {user?.name.first} {user?.name.last}
-                </Text>
-                <Text size="14px">{user?.email}</Text>
-                <Text size="14px">
-                  {user?.location.street.number} {user?.location.street.name}
-                </Text>
-                <Text size="14px">
-                  {user?.location.city} {user?.location.country}
-                </Text>
-              </S.UserInfo>
-              <S.IconButtonWrapper
-                isVisible={index === hoveredUserId || isFavorite(index)}
+      <S.List id="infinityList">
+        <InfiniteScroll
+          dataLength={users.length}
+          next={InfiniteScrollNext}
+          hasMore={users.length <= 300}
+          scrollableTarget="infinityList"
+        >
+          {users.map((user, index) => {
+            return (
+              <S.User
+                key={index}
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={handleMouseLeave}
               >
-                <IconButton onClick={onFavoriteClick}>
-                  <FavoriteIcon color="error" />
-                </IconButton>
-              </S.IconButtonWrapper>
-            </S.User>
-          );
-        })}
+                <S.UserPicture src={user?.picture.large} alt="" />
+                <S.UserInfo>
+                  <Text size="22px" bold>
+                    {user?.name.title} {user?.name.first} {user?.name.last}
+                  </Text>
+                  <Text size="14px">{user?.email}</Text>
+                  <Text size="14px">
+                    {user?.location.street.number} {user?.location.street.name}
+                  </Text>
+                  <Text size="14px">
+                    {user?.location.city} {user?.location.country}
+                  </Text>
+                </S.UserInfo>
+                <S.IconButtonWrapper
+                  isVisible={index === hoveredUserId || isFavorite(index)}
+                >
+                  <IconButton onClick={onFavoriteClick}>
+                    <FavoriteIcon color="error" />
+                  </IconButton>
+                </S.IconButtonWrapper>
+              </S.User>
+            );
+          })}
+        </InfiniteScroll>
         {isLoading && (
           <S.SpinnerWrapper>
             <Spinner color="primary" size="45px" thickness={6} variant="indeterminate" />
