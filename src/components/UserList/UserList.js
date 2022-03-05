@@ -30,6 +30,7 @@ const UserList = ({
     setHoveredUserId();
   };
 
+  // CheckBox filtering
   const onChangeCheckBox = (value) => {
     const newCheckedNat = new Set(checkedNat);
 
@@ -43,6 +44,7 @@ const UserList = ({
     fetchUsers(Array.from(newCheckedNat).join(","));
   };
 
+  // Favorite button
   const onFavoriteClick = () => {
     const email = users[hoveredUserId].email;
     get(email)
@@ -62,10 +64,16 @@ const UserList = ({
     return favorites.map((user) => user.email).includes(users[index].email);
   };
 
+  // Infinity scroll
   const onInfiniteScrollNext = () => {
-    fetchMoreUsers?.(Array.from(checkedNat).join(","));
+    if (searchText.length < 1) {
+      fetchMoreUsers?.(Array.from(checkedNat).join(","));
+    }
+
+    return;
   };
 
+  // Real time search
   const handleSearchChange = (e) => {
     setSearchText(e.target.value);
   };
@@ -81,6 +89,10 @@ const UserList = ({
       user?.location.city.includes(searchText) ||
       user?.location.country.includes(searchText)
     );
+  };
+
+  const getFilteredUsers = () => {
+    return users.filter(userIncludesSearchText);
   };
 
   return (
@@ -109,12 +121,12 @@ const UserList = ({
       </S.Filters>
       <S.List id="infinityList">
         <InfiniteScroll
-          dataLength={users.length}
+          dataLength={getFilteredUsers().length}
           next={onInfiniteScrollNext}
           hasMore={users.length <= 300}
           scrollableTarget="infinityList"
         >
-          {users.filter(userIncludesSearchText).map((user, index) => {
+          {getFilteredUsers().map((user, index) => {
             return (
               <S.User
                 key={index}
