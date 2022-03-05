@@ -10,7 +10,7 @@ export const List = styled.div`
   flex-direction: column;
   gap: 35px;
   width: 500px;
-  height: calc(100vh - 270px);
+  height: calc(100vh - 350px);
   margin-block-start: 30px;
   overflow-y: auto;
 `;
@@ -53,4 +53,9 @@ export const Filters = styled.div`
   & > * {
     margin-inline-end: 8px;
   }
+`;
+
+export const SearchFilter = styled.div`
+  display: flex;
+  justify-content: center;
 `;

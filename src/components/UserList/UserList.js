@@ -5,6 +5,7 @@ import Spinner from "components/Spinner";
 import CheckBox from "components/CheckBox";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import TextField from "@material-ui/core/TextField";
 import * as S from "./style";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -19,6 +20,7 @@ const UserList = ({
 }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
   const [checkedNat, setCheckedNat] = useState(new Set());
+  const [searchText, setSearchText] = useState("");
 
   const handleMouseEnter = (index) => {
     setHoveredUserId(index);
@@ -60,12 +62,39 @@ const UserList = ({
     return favorites.map((user) => user.email).includes(users[index].email);
   };
 
-  const InfiniteScrollNext = () => {
+  const onInfiniteScrollNext = () => {
     fetchMoreUsers?.(Array.from(checkedNat).join(","));
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
+  };
+
+  const userIncludesSearchText = (user) => {
+    return (
+      user?.name.title.includes(searchText) ||
+      user?.name.first.includes(searchText) ||
+      user?.name.last.includes(searchText) ||
+      user?.email.includes(searchText) ||
+      user?.location.street.number.toString().includes(searchText) ||
+      user?.location.street.name.includes(searchText) ||
+      user?.location.city.includes(searchText) ||
+      user?.location.country.includes(searchText)
+    );
   };
 
   return (
     <S.UserList>
+      <S.SearchFilter>
+        <TextField
+          fullWidth
+          label="Search"
+          variant="outlined"
+          helperText="Search existing users"
+          value={searchText}
+          onChange={handleSearchChange}
+        />
+      </S.SearchFilter>
       <S.Filters>
         {checkBoxItems &&
           checkBoxItems.map((filter, index) => (
@@ -81,11 +110,11 @@ const UserList = ({
       <S.List id="infinityList">
         <InfiniteScroll
           dataLength={users.length}
-          next={InfiniteScrollNext}
+          next={onInfiniteScrollNext}
           hasMore={users.length <= 300}
           scrollableTarget="infinityList"
         >
-          {users.map((user, index) => {
+          {users.filter(userIncludesSearchText).map((user, index) => {
             return (
               <S.User
                 key={index}
