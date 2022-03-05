@@ -48,6 +48,7 @@ export const UserPicture = styled.img`
 export const SpinnerWrapper = styled.div`
   display: flex;
   justify-content: center;
+  overflow: hidden;
 `;
 
 export const IconButtonWrapper = styled.div`

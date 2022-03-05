@@ -100,6 +100,7 @@ const UserList = ({
       <S.SearchFilter>
         <TextField
           fullWidth
+          color="primary"
           label="Search"
           variant="outlined"
           helperText="Search existing users"
